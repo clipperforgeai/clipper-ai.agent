@@ -1,0 +1,35 @@
+
+{
+  "niches": [
+    "Entertainment", "Gaming", "Finance", "Business", "Education",
+    "Technology & AI", "Health & Fitness", "Sports", "Film & TV", "Music",
+    "Motivation", "Food", "Travel", "Fashion & Beauty", "Cars", "Real Estate",
+    "News", "Politics", "Career", "Science", "Animals", "Culture",
+    "Parenting", "Law & Crime", "DIY", "Mystery"
+  ],
+  "audiences": {
+    "US": { "lang": "en", "label": "United States 🇺🇸" },
+    "UK": { "lang": "en", "label": "United Kingdom 🇬🇧" },
+    "CA": { "lang": "en", "label": "Canada 🇨🇦" },
+    "ID": { "lang": "id", "label": "Indonesia 🇮🇩" }
+  },
+  "angles": ["Suspense", "Reaction", "Surprise", "Strategy", "Mistake", "Emotion", "Outcome", "Controversy"],
+  "nicheTriggers": {
+    "Gaming": ["clutch", "1vX", "ace", "headshot", "rage", "funny fail", "comeback", "insane play", "unexpected play", "final round"],
+    "Podcast": ["controversial statement", "confession", "shocking revelation", "strong quote", "argument", "emotional story"],
+    "Finance": ["market insight", "market mistake", "risk warning", "surprising fact", "opportunity", "controversial opinion"],
+    "Education": ["surprising fact", "explanation", "misconception", "useful tip", "important lesson"],
+    "Entertainment": ["funny moment", "shocking reaction", "unexpected event", "viral joke", "climax"],
+    "Technology & AI": ["breakthrough", "mindblowing tool", "future feature", "ai workflow", "unexpected update"],
+    "Default": ["critical moment", "surprising event", "important statement", "peak reaction", "valuable info"]
+  },
+  "hashtags": {
+    "Gaming": ["#valorant", "#clutch", "#fpsgaming", "#gamingclips", "#shorts"],
+    "Finance": ["#finance", "#moneytips", "#investing", "#business", "#shorts"],
+    "Podcast": ["#podcast", "#interview", "#deeptalk", "#viralquotes", "#shorts"],
+    "Entertainment": ["#viral", "#trending", "#entertainment", "#funny", "#reels"],
+    "Technology & AI": ["#tech", "#ai", "#artificialintelligence", "#futuretech", "#shorts"],
+    "Education": ["#edutok", "#learning", "#facts", "#knowledge", "#shorts"],
+    "Default": ["#viral", "#trending", "#fyp", "#foryou", "#shorts"]
+  }
+  }
