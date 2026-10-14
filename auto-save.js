@@ -277,15 +277,14 @@
   }
 
   function init() {
-    const state = restoreState();
-    if (state) {
-      if (window.currentVideoFile) {
-        applyRestoredState(state);
-        console.log('[AutoSave] Auto-restore (video sudah dimuat)');
-      } else {
-        showRestoreBanner(state);
-      }
-    }
+  const state = restoreState();
+  if (state) {
+    // ═══ AUTO-RESTORE TANPA TANYA ═══
+    applyRestoredState(state);
+    console.log('[AutoSave] ♻️ Auto-restore aktif (banner disabled)');
+    // ═════════════════════════════════
+  }
+  // ...
 
     attachEditListeners();
     attachPaginationListeners();
