@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0f19">
+  <title>Kebijakan Privasi — AI Agent</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #151c2e;
+      --text: #f8fafc;
+      --sub: #94a3b8;
+      --border: #1e293b;
+      --accent: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 16px;
+      font-size: 15px;
+    }
+    .container { max-width: 760px; margin: 0 auto; padding: 20px 0 60px; }
+    header {
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    .meta { color: var(--sub); font-size: 0.85rem; }
+    h2 {
+      font-size: 1.15rem;
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--accent);
+    }
+    p { margin-bottom: 12px; color: #cbd5e1; }
+    ul { margin: 12px 0 12px 22px; }
+    li { margin-bottom: 8px; color: #cbd5e1; }
+    strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back-btn {
+      display: inline-block;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 24px;
+    }
+    .good {
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-left: 4px solid #10b981;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+    }
+    .warn {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-left: 4px solid #f59e0b;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+      color: #fde68a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--accent); font-weight: 700; background: rgba(16,185,129,0.05); }
+    td { color: #cbd5e1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔒 Kebijakan Privasi</h1>
+      <p class="meta">Berlaku efektif: <span id="effectiveDate">1 Januari 2026</span> · Versi 2.6.0</p>
+    </header>
+
+    <div class="good">
+      <strong>✅ RINGKASAN:</strong> Aplikasi ini memproses video <strong>100% lokal di browser Anda</strong>. Kami <strong>TIDAK</strong> mengumpulkan, menyimpan, atau mengirim video Anda ke server manapun. Tidak ada akun, tidak ada tracking, tidak ada iklan.
+    </div>
+
+    <h2>1. Prinsip Dasar</h2>
+    <p>AI Agent dirancang dengan filosofi <strong>"Privacy by Design"</strong>:</p>
+    <ul>
+      <li>✅ Semua pemrosesan video terjadi <strong>di perangkat Anda</strong></li>
+      <li>✅ Tidak ada upload ke server</li>
+      <li>✅ Tidak ada akun pengguna</li>
+      <li>✅ Tidak ada cookie tracking</li>
+      <li>✅ Tidak ada analytics pihak ketiga</li>
+      <li>✅ Tidak ada iklan</li>
+    </ul>
+
+    <h2>2. Data yang Kami TIDAK Kumpulkan</h2>
+    <p>Kami <strong>tidak pernah</strong> mengumpulkan:</p>
+    <ul>
+      <li>❌ Video atau audio yang Anda proses</li>
+      <li>❌ Nama, email, nomor telepon, atau identitas apapun</li>
+      <li>❌ Lokasi geografis</li>
+      <li>❌ Riwayat browsing</li>
+      <li>❌ Kontak atau file pribadi</li>
+      <li>❌ Data biometrik</li>
+    </ul>
+
+    <h2>3. Data yang Disimpan LOKAL di Perangkat Anda</h2>
+    <p>Aplikasi menyimpan data berikut di <strong>localStorage & IndexedDB browser Anda</strong> — data ini <strong>tidak pernah keluar dari perangkat</strong>:</p>
+
+    <table>
+      <tr>
+        <th>Data</th>
+        <th>Tujuan</th>
+        <th>Hapus Otomatis?</th>
+      </tr>
+      <tr>
+        <td>Workspace (klip hasil)</td>
+        <td>Auto-save agar tidak hilang saat refresh</td>
+        <td>Manual (tombol Mulai Baru)</td>
+      </tr>
+      <tr>
+        <td>Preferensi tema</td>
+        <td>Dark/Light mode</td>
+        <td>Tidak</td>
+      </tr>
+      <tr>
+        <td>LLM cache</td>
+        <td>Percepat generate copy berikutnya</td>
+        <td>Ya (30 hari / 500 entry)</td>
+      </tr>
+      <tr>
+        <td>Behavior log</td>
+        <td>Auto-downgrade jika crash berulang</td>
+        <td>Ya (max 30 run)</td>
+      </tr>
+      <tr>
+        <td>Benchmark result</td>
+        <td>Setting device optimal</td>
+        <td>Manual (Reset Settings)</td>
+      </tr>
+      <tr>
+        <td>Feature flags</td>
+        <td>Status toggle fitur</td>
+        <td>Tidak</td>
+      </tr>
+    </table>
+
+    <p><strong>Cara hapus semua data lokal:</strong> Buka DevTools → Application → Clear Storage, atau uninstall PWA.</p>
+
+    <h2>4. Koneksi ke Pihak Ketiga</h2>
+    <div class="warn">
+      <strong>⚠️ PERHATIAN:</strong> Meskipun video Anda tidak di-upload, Aplikasi <strong>mengunduh resource</strong> dari internet saat pertama kali digunakan:
+    </div>
+
+    <table>
+      <tr>
+        <th>Layanan</th>
+        <th>Yang Diunduh</th>
+        <th>Tujuan</th>
+      </tr>
+      <tr>
+        <td>jsDelivr / unpkg</td>
+        <td>Library JavaScript (MediaPipe, transformers.js)</td>
+        <td>Runtime AI</td>
+      </tr>
+      <tr>
+        <td>storage.googleapis.com</td>
+        <td>Model MediaPipe (face, pose, gesture)</td>
+        <td>Deteksi visual</td>
+      </tr>
+      <tr>
+        <td>huggingface.co</td>
+        <td>Model LaMini-Flan-T5 (jika LLM diaktifkan)</td>
+        <td>Generate copy AI</td>
+      </tr>
+      <tr>
+        <td>Google (jika speech)</td>
+        <td>Audio mic (fitur eksperimental)</td>
+        <td>Transkripsi suara</td>
+      </tr>
+    </table>
+
+    <p><strong>Catatan:</strong> Setelah resource ini tersimpan di cache browser (Service Worker), Aplikasi dapat berjalan <strong>100% offline</strong>.</p>
+
+    <h2>5. Fitur Speech Recognition (Eksperimental)</h2>
+    <div class="warn">
+      <strong>⚠️ PERHATIAN KHUSUS:</strong> Jika Anda mengaktifkan fitur <strong>"Rekam Suara"</strong> untuk transkripsi, fitur ini menggunakan <strong>Web Speech API</strong> bawaan browser. Artinya:
+    </div>
+    <ul>
+      <li>🎙️ Mikrofon Anda akan aktif</li>
+      <li>📡 Audio dikirim ke server Google (browser-dependent)</li>
+      <li>🔓 Kami <strong>tidak bisa mengontrol</strong> bagaimana Google memprosesnya</li>
+      <li>⚠️ Fitur ini <strong>OPSIONAL</strong> dan harus diaktifkan manual</li>
+      <li>💡 Kami <strong>menyarankan</strong> gunakan mode "Manual" / "Tempel Teks" saja</li>
+    </ul>
+    <p>Dengan mengaktifkan fitur ini, Anda menyetujui pemrosesan audio oleh Google sesuai <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Kebijakan Privasi Google</a>.</p>
+
+    <h2>6. Anak di Bawah Umur</h2>
+    <p>Aplikasi ini tidak ditujukan untuk anak di bawah 13 tahun (atau 16 tahun di Uni Eropa). Kami tidak dengan sengaja mengumpulkan data anak-anak.</p>
+
+    <h2>7. Keamanan</h2>
+    <p>Karena semua pemrosesan bersifat lokal:</p>
+    <ul>
+      <li>✅ Tidak ada risiko kebocoran server</li>
+      <li>✅ Tidak ada penyadapan (kecuali fitur speech)</li>
+      <li>✅ Data Anda hanya sekuat keamanan perangkat Anda</li>
+    </ul>
+    <p><strong>Tips:</strong> Gunakan perangkat dengan kunci layar aktif, dan hindari memproses video sensitif di perangkat publik.</p>
+
+    <h2>8. Hak Anda (GDPR/CCPA-style)</h2>
+    <p>Meskipun kami tidak menyimpan data Anda, Anda tetap berhak untuk:</p>
+    <ul>
+      <li><strong>Akses</strong> — semua data ada di browser Anda (DevTools → Application)</li>
+      <li><strong>Hapus</strong> — clear browser storage kapan saja</li>
+      <li><strong>Portabilitas</strong> — export data via fitur Backup di Settings</li>
+      <li><strong>Keberatan</strong> — berhenti menggunakan Aplikasi</li>
+    </ul>
+
+    <h2>9. Perubahan Kebijakan</h2>
+    <p>Kebijakan ini bisa diperbarui. Perubahan besar akan diumumkan di halaman utama Aplikasi. Tanggal berlaku akan diperbarui otomatis.</p>
+
+    <h2>10. Kontak</h2>
+    <p>Pertanyaan tentang privasi:</p>
+    <p>📧 <strong>clipperforge.ai@gmail.com</strong></p>
+
+    <hr style="border:none; border-top:1px solid var(--border); margin:32px 0 16px;">
+
+    <p style="font-size:0.85rem; color:var(--sub); text-align:center;">
+      <strong>TL;DR:</strong> Video Anda tetap di perangkat Anda. Titik.
+    </p>
+
+    <div style="text-align:center;">
+      <a href="./index.html" class="back-btn">← Kembali ke Aplikasi</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const el = document.getElementById('effectiveDate');
+      if (!el) return;
+      const d = new Date();
+      const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      el.textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    })();
+  </script>
+</body>
+</html>

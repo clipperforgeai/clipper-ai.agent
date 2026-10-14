@@ -1,0 +1,593 @@
+/**
+ * AI AGENT - PREMIUM UI UPGRADE
+ * Layered on top of existing styles. Tidak mengubah struktur.
+ * 
+ * Upgrade:
+ * - Glassmorphism header
+ * - Smooth animations
+ * - Custom scrollbar
+ * - Better typography & spacing
+ * - Hover micro-interactions
+ * - Loading skeleton shimmer
+ * - Clip card slide dari KANAN (cascade)
+ * - Premium toast notification
+ */
+
+/* ═══════════════════════════════════════════════════════════
+   1. GLOBAL — smooth transition & font smoothing
+   ═══════════════════════════════════════════════════════════ */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: -0.011em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   2. CUSTOM SCROLLBAR
+   ═══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--input-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   3. HEADER — glassmorphism + animated gradient
+   ═══════════════════════════════════════════════════════════ */
+.glass-header {
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.08) 0%,
+    rgba(16, 185, 129, 0.05) 50%,
+    rgba(139, 92, 246, 0.08) 100%
+  ), var(--card-bg);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.glass-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(56, 189, 248, 0.1),
+    transparent 30%
+  );
+  animation: rotate 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+.glass-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.brand-title h1 {
+  background: linear-gradient(135deg, #38bdf8, #10b981);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   4. THEME TOGGLE — animated
+   ═══════════════════════════════════════════════════════════ */
+.theme-toggle-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
+  border-color: var(--accent-color);
+}
+
+.theme-toggle-btn:active {
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   5. CARDS — hover lift + glass border
+   ═══════════════════════════════════════════════════════════ */
+.card {
+  position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.15),
+    0 20px 40px rgba(56, 189, 248, 0.08);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   6. INPUT & SELECT — focus glow
+   ═══════════════════════════════════════════════════════════ */
+.input-field {
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  background: var(--card-bg);
+}
+
+.input-field:hover:not(:focus) {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+select.input-field {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  padding-right: 30px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   7. DROPZONE — animated dashed border + hover glow
+   ═══════════════════════════════════════════════════════════ */
+.dropzone {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.03),
+    rgba(16, 185, 129, 0.03)
+  ), var(--input-bg);
+}
+
+.dropzone:hover {
+  border-color: var(--accent-color);
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.08),
+    rgba(16, 185, 129, 0.06)
+  ), var(--input-bg);
+  transform: scale(1.01);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
+}
+
+.drop-icon-wrapper {
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.dropzone:hover .drop-icon-wrapper {
+  transform: translateY(-4px) scale(1.1);
+  color: var(--accent-color);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   8. BUTTONS — shiny premium effect
+   ═══════════════════════════════════════════════════════════ */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  box-shadow:
+    0 4px 12px rgba(2, 132, 199, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(2, 132, 199, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-primary:disabled {
+  background: linear-gradient(135deg, #475569, #334155);
+  box-shadow: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   9. STATUS BADGES — pulse animation
+   ═══════════════════════════════════════════════════════════ */
+.status-badge {
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+  transition: all 0.3s ease;
+}
+
+.status-badge:not(.memory-safe-badge):not(#statusBadge) {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.memory-safe-badge {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10. CLIP CARDS — slide dari KANAN + cascade
+   ═══════════════════════════════════════════════════════════ */
+.clip-card {
+  animation: slideInRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.02),
+    rgba(139, 92, 246, 0.02)
+  ), var(--clip-card-bg);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clip-card:hover {
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 20px 40px rgba(56, 189, 248, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Slide dari kanan */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(80px) scale(0.96);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-6px) scale(1.005);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Cascade: klip muncul satu per satu */
+.clip-card:nth-child(1) { animation-delay: 0s; }
+.clip-card:nth-child(2) { animation-delay: 0.08s; }
+.clip-card:nth-child(3) { animation-delay: 0.16s; }
+.clip-card:nth-child(4) { animation-delay: 0.24s; }
+.clip-card:nth-child(5) { animation-delay: 0.32s; }
+
+/* Score chip — animated shine */
+.score-chip {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Preview video — rounded + shadow */
+.clip-preview,
+.clip-card video {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Textareas — focus glow */
+.clip-card textarea:focus,
+.clip-card input[type="text"]:focus {
+  outline: none;
+  background: rgba(56, 189, 248, 0.03);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  border-radius: 4px;
+}
+
+/* Inner sections */
+.clip-inner,
+.clip-inner-evidence {
+  transition: all 0.2s ease;
+}
+
+.clip-inner:hover,
+.clip-inner-evidence:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   11. COPY BUTTONS — hover micro-interaction
+   ═══════════════════════════════════════════════════════════ */
+.copy-btn-mini,
+.clip-card button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.copy-btn-mini:hover {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.copy-btn-mini:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* CapCut & Galeri buttons */
+.clip-btn-capcut:hover,
+.clip-btn-gallery:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.clip-btn-capcut:active,
+.clip-btn-gallery:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   12. PAGINATION — premium look
+   ═══════════════════════════════════════════════════════════ */
+.pagination-btn {
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+}
+
+.page-indicator {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(16, 185, 129, 0.1));
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   13. PROGRESS BAR — animated gradient
+   ═══════════════════════════════════════════════════════════ */
+#progressFill {
+  background: linear-gradient(
+    90deg,
+    #38bdf8 0%,
+    #10b981 50%,
+    #38bdf8 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Cancel button — pulsing red */
+#btnCancelAnalysis {
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+#btnCancelAnalysis:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   14. LOADING SKELETON (state "Memproses...")
+   ═══════════════════════════════════════════════════════════ */
+#clipResults > p:only-child {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(56, 189, 248, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   15. BATCH ACTION BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+.batch-btn-2,
+#btnDownloadAll {
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #10b981 100%);
+  background-size: 200% 100%;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s ease;
+}
+
+.batch-btn-2:hover,
+#btnDownloadAll:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   16. TOAST NOTIFICATION PREMIUM
+   ═══════════════════════════════════════════════════════════ */
+[style*="position: fixed"][style*="top: 20px"] {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   17. FOOTER LINKS
+   ═══════════════════════════════════════════════════════════ */
+#aiAgentFooter a {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+#aiAgentFooter a:hover {
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+#aiAgentFooter a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+#aiAgentFooter a:hover::after {
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   18. MODAL PREMIUM (edit timestamp, disclaimer, dll)
+   ═══════════════════════════════════════════════════════════ */
+[style*="position: fixed"][style*="inset: 0"] > div {
+  animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(56, 189, 248, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   19. VIDEO PREVIEW ELEMENT
+   ═══════════════════════════════════════════════════════════ */
+#sourceVideo {
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(56, 189, 248, 0.2);
+  transition: all 0.3s ease;
+}
+
+#sourceVideo:hover {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(56, 189, 248, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   20. MOBILE OPTIMIZATION
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .glass-header {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Reduce animation duration di HP kentang */
+  .glass-header::before,
+  #progressFill {
+    animation-duration: 4s;
+  }
+
+  .clip-card {
+    animation-duration: 0.35s;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   21. ACCESSIBILITY — reduce motion
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

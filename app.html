@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="color-scheme" content="dark">
+
+  <title>Clipper Forge — Potong Video Otomatis dengan AI</title>
+  <meta name="description" content="Ubah 1 video panjang jadi beberapa klip pendek siap upload ke TikTok, Reels, dan Shorts. 100% offline, tanpa upload ke server.">
+  <meta name="keywords" content="AI video clipper, potong video otomatis, capcut helper, TikTok clipper, video editor AI">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Clipper Forge — Potong Video Otomatis">
+  <meta property="og:description" content="1 video panjang → beberapa klip siap upload. Gratis, offline, tanpa API.">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #151c2e;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --sub: #94a3b8;
+      --muted: #64748b;
+      --accent-1: #8b5cf6;
+      --accent-2: #38bdf8;
+      --green: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img, svg { display: block; max-width: 100%; }
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ═══ NAVBAR ═══ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.3px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 900;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+    }
+    .nav-cta {
+      padding: 9px 18px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #fff;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
+    }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.18), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--green);
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 6vw, 3rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, #fff 30%, #a5b4fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p.lead {
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
+      color: var(--sub);
+      max-width: 620px;
+      margin: 0 auto 28px;
+      line-height: 1.65;
+    }
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .cta-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #fff;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-width: 240px;
+    }
+    .cta-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(139, 92, 246, 0.55);
+    }
+    .cta-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .cta-sub span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ═══ SECTIONS ═══ */
+    section { padding: 60px 0; }
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .section-title .eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 10px;
+    }
+    .section-title h2 {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .section-title p {
+      color: var(--sub);
+      font-size: 0.92rem;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* ═══ FEATURES GRID ═══ */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 640px) { .features { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 960px) { .features { grid-template-columns: repeat(3, 1fr); } }
+    .feature {
+      padding: 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .feature:hover {
+      transform: translateY(-3px);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.1));
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+    .feature h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+    .feature p {
+      font-size: 0.82rem;
+      color: var(--sub);
+      line-height: 1.6;
+    }
+
+    /* ═══ STEPS ═══ */
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      counter-reset: step;
+    }
+    @media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+    .step {
+      position: relative;
+      padding: 26px 22px 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      counter-increment: step;
+    }
+    .step::before {
+      content: counter(step);
+      position: absolute;
+      top: -14px;
+      left: 22px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+    .step h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+    .step p {
+      font-size: 0.82rem;
+      color: var(--sub);
+      line-height: 1.6;
+    }
+
+    /* ═══ FOR WHO ═══ */
+    .for-who {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) { .for-who { grid-template-columns: 1fr 1fr; } }
+    .who-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .who-card .emoji {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .who-card h4 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .who-card p {
+      font-size: 0.78rem;
+      color: var(--sub);
+      line-height: 1.55;
+    }
+
+    /* ═══ HONEST BOX ═══ */
+    .honest {
+      padding: 24px;
+      background: rgba(245, 158, 11, 0.06);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 16px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .honest h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .honest ul {
+      list-style: none;
+      padding: 0;
+    }
+    .honest li {
+      font-size: 0.84rem;
+      color: #fde68a;
+      line-height: 1.6;
+      padding-left: 22px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .honest li::before {
+      content: '•';
+      position: absolute;
+      left: 6px;
+      color: #fbbf24;
+      font-weight: 900;
+    }
+
+    /* ═══ FAQ ═══ */
+    .faq {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 0;
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      gap: 12px;
+      user-select: none;
+    }
+    .faq-q::after {
+      content: '+';
+      font-size: 1.4rem;
+      color: var(--accent-2);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding-top 0.3s ease;
+      font-size: 0.82rem;
+      color: var(--sub);
+      line-height: 1.7;
+    }
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding-top: 12px;
+    }
+
+    /* ═══ FINAL CTA ═══ */
+    .final-cta {
+      padding: 50px 24px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+    .final-cta h2 {
+      font-size: clamp(1.35rem, 4vw, 1.9rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .final-cta p {
+      color: var(--sub);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .final-cta .cta-primary {
+      position: relative;
+    }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      margin-top: 40px;
+      padding: 30px 0;
+      border-top: 1px solid var(--border);
+    }
+    .footer-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+      text-align: center;
+    }
+    @media (min-width: 640px) {
+      .footer-grid {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      font-size: 0.78rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: var(--sub);
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 16px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <div class="brand-logo">C</div>
+        <span>Clipper Forge</span>
+      </a>
+      <!-- ✅ FIX: link ke aplikasi (index.html), bukan app.html -->
+      <a href="./index.html" class="nav-cta">Buka Aplikasi →</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">✅ 100% Gratis · Offline · Tanpa Daftar</div>
+
+      <h1>
+        Ubah <span class="gradient">1 Video Panjang</span><br>
+        Jadi <span class="gradient">Beberapa Clip dan Siap Upload</span>
+      </h1>
+      <p class="lead">
+        Clipper Forge menganalisis video kamu dan menemukan momen-momen paling menarik — lalu
+        memotongnya otomatis. Siap di-export ke CapCut, galeri, TikTok, Instagram Reels, dan YouTube Shorts.
+      </p>
+
+      <div class="cta-group">
+        <!-- ✅ FIX: link ke aplikasi (index.html) -->
+        <a href="./index.html" class="cta-primary">
+          🚀 Coba Gratis Sekarang
+        </a>
+        <div class="cta-sub">
+          <span>✅ Tanpa daftar</span>
+          <span>✅ Tanpa iklan</span>
+          <span>✅ Gratis</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ FITUR UTAMA ═══ -->
+  <section id="fitur">
+    <div class="container">
+      <div class="section-title reveal">
+        <div class="eyebrow">Fitur Utama</div>
+        <h2>Yang Kamu Dapatkan</h2>
+        <p>Dirancang untuk content creator yang mau kerja cepat tanpa ribet</p>
+      </div>
+
+      <div class="features">
+        <div class="feature reveal">
+          <div class="feature-icon">🎯</div>
+          <h3>Deteksi Momen Otomatis</h3>
+          <p>AI menganalisis gerakan, audio, dan pergantian adegan untuk menemukan momen paling menarik di video kamu.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">✂️</div>
+          <h3>Potong Instan MP4</h3>
+          <p>Format MP4/MOV/M4V dipotong tanpa re-encode. Hasil tetap HD, proses cuma hitungan detik.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">📝</div>
+          <h3>Hook + Caption Siap Pakai</h3>
+          <p>Setiap klip dapat draft hook, caption, CTA, dan hashtag. Tinggal edit sedikit, langsung upload.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">🎬</div>
+          <h3>Export Langsung ke CapCut</h3>
+          <p>Kirim klip langsung ke CapCut lewat share sheet. Siapkan subtitle & styling di sana.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">🌐</div>
+          <h3>4 Bahasa & Region</h3>
+          <p>Indonesia, US, UK, dan Canada. Copywriting otomatis menyesuaikan gaya bahasa lokal.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">🔒</div>
+          <h3>100% Privat & Offline</h3>
+          <p>Video kamu <b>tidak pernah</b> dikirim ke server. Semua proses jalan di browser kamu sendiri.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CARA PAKAI ═══ -->
+  <section id="cara-pakai">
+    <div class="container">
+      <div class="section-title reveal">
+        <div class="eyebrow">Cara Pakai</div>
+        <h2>Tiga Langkah, Selesai</h2>
+        <p>Dari video mentah ke klip siap upload, kurang dari 5 menit</p>
+      </div>
+
+      <div class="steps">
+        <div class="step reveal">
+          <h3>Upload Video</h3>
+          <p>Pilih video panjang dari galeri HP atau laptop kamu. Format MP4, MOV, atau M4V.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Klik Analyze</h3>
+          <p>AI akan scan video dan kasih kamu beberapa klip dengan skor tertinggi. Tunggu 1-3 menit.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Export & Upload</h3>
+          <p>Pilih klip favorit, kirim ke CapCut, simpan ke galeri, atau langsung upload ke TikTok.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ UNTUK SIAPA ═══ -->
+  <section id="untuk-siapa">
+    <div class="container">
+      <div class="section-title reveal">
+        <div class="eyebrow">Cocok Untuk</div>
+        <h2>Siapa yang Cocok Pakai Clipper Forge</h2>
+      </div>
+
+      <div class="for-who">
+        <div class="who-card reveal">
+          <span class="emoji">✂️</span>
+          <div>
+            <h4>Clipper TikTok, Reels & YouTube Shorts</h4>
+            <p>Ubah video panjang jadi klip pendek siap posting. AI bantu pilih momen terbaik agar kamu bisa posting lebih cepat.</p>
+          </div>
+        </div>
+        <div class="who-card reveal">
+          <span class="emoji">🎮</span>
+          <div>
+            <h4>Clipper Gaming & Esports</h4>
+            <p>Ubah highlight stream atau turnamen jadi klip pendek siap posting ke TikTok atau YouTube Shorts.</p>
+          </div>
+        </div>
+        <div class="who-card reveal">
+          <span class="emoji">🎙️</span>
+          <div>
+            <h4>Clipper Podcast & Talkshow</h4>
+            <p>Potong momen paling berbobot dari podcast atau talkshow panjang, tanpa harus tonton ulang dari awal.</p>
+          </div>
+        </div>
+        <div class="who-card reveal">
+          <span class="emoji">💼</span>
+          <div>
+            <h4>Clipper Bisnis & UMKM</h4>
+            <p>Bikin konten promosi dari video webinar, demo produk, atau sesi training yang sudah ada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ JUJUR / HONEST BOX ═══ -->
+  <section>
+    <div class="container">
+      <div class="honest reveal">
+        <h3>⚠️ Yang Perlu Kamu Tahu Dulu</h3>
+        <ul>
+          <li>AI cuma bantu <b>deteksi momen</b> — hasil tetap perlu kamu review manual.</li>
+          <li>Output tetap <b>butuh editing kecil</b> di CapCut (subtitle, music, transisi).</li>
+          <li>Draft caption & hook bisa terasa <b>generik</b> — tambahkan konteks asli video kamu.</li>
+          <li>Fitur transkrip suara masih <b>eksperimental</b> dan mungkin tidak akurat.</li>
+          <li>Kamu <b>bertanggung jawab penuh</b> atas hak cipta video yang kamu proses.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-title reveal">
+        <div class="eyebrow">FAQ</div>
+        <h2>Pertanyaan Sering Ditanya</h2>
+      </div>
+
+      <div class="faq">
+        <div class="faq-item">
+          <div class="faq-q">Apakah videoku di-upload ke server?</div>
+          <div class="faq-a">
+            <p>Tidak. Semua proses berjalan 100% di browser kamu. Kami tidak punya server untuk menyimpan video — tidak ada file yang keluar dari perangkat kamu. Cek sendiri di privacy policy.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Berapa biaya pakainya?</div>
+          <div class="faq-a">
+            <p>Gratis, tidak ada iklan, tidak ada daftar akun. Kamu bisa pakai sebanyak yang kamu mau.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Bagaimana kualitas video hasil potongan?</div>
+          <div class="faq-a">
+            <p>Untuk format MP4, MOV, dan M4V, video dipotong <b>tanpa re-encode</b>. Kualitasnya tetap 100% sama seperti aslinya. Cepat dan tidak kehilangan kualitas.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Apakah cocok di HP kentang?</div>
+          <div class="faq-a">
+            <p>Bisa, tapi terbatas. HP dengan RAM 2-3GB akan otomatis pakai mode Lite — lebih lambat tapi tetap jalan. Untuk hasil optimal, gunakan HP RAM 4GB ke atas atau laptop.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Apakah bisa potong video orang lain dari YouTube?</div>
+          <div class="faq-a">
+            <p>Secara teknis bisa, tapi kamu bertanggung jawab penuh atas hak ciptanya. Gunakan hanya untuk konten yang kamu punya izin, atau untuk keperluan fair use yang sah.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Kenapa butuh waktu 1-3 menit untuk analisis?</div>
+          <div class="faq-a">
+            <p>Karena AI perlu scan video frame per frame untuk deteksi gerakan, audio, dan pergantian adegan. Semakin panjang videonya, semakin lama prosesnya. Video 10 menit biasanya selesai dalam 1-2 menit.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ═══ -->
+  <section>
+    <div class="container">
+      <div class="final-cta reveal">
+        <h2>Udah Siap Coba?</h2>
+        <p>Gratis, tanpa daftar. Tinggal upload dan mulai.</p>
+        <!-- ✅ FIX: link ke aplikasi (index.html) -->
+        <a href="./index.html" class="cta-primary">🚀 Mulai Sekarang</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">C</div>
+          <span>Clipper Forge</span>
+        </div>
+        <div class="footer-links">
+          <a href="./terms.html">📜 Syarat & Ketentuan</a>
+          <a href="./privacy.html">🔒 Kebijakan Privasi</a>
+          <a href="https://wa.me/6283834575478" target="_blank" rel="noopener">💬 WhatsApp</a>
+          <a href="mailto:clipperforge.ai@gmail.com">✉️ Gmail</a>
+        </div>
+      </div>
+      <div class="footer-copy">
+        © 2026 Clipper Forge · Dibuat dengan ADITIA PERMANA di Indonesia<br>
+        Video kamu tetap di perangkat kamu. Titik.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ═══ REVEAL ON SCROLL ═══
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(el => el.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(el => observer.observe(el));
+    })();
+
+    // ═══ FAQ ACCORDION ═══
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const q = item.querySelector('.faq-q');
+      if (!q) return;
+      q.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(o => o.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    console.log('[Landing] ✅ Clipper Forge landing page loaded v2.7.2');
+  </script>
+
+</body>
+</html>

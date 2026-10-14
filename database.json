@@ -1,0 +1,78 @@
+{
+  "regions": {
+    "en-US": {
+      "name": "United States",
+      "lang": "en-US",
+      "currency": "USD ($)",
+      "slang": ["no cap", "fr fr", "lowkey", "mindblown", "wild", "straight up"],
+      "hook_styles": {
+        "viral": "VIRAL! You won't believe what happened in {topic}!",
+        "reason": "THIS is the exact reason why {topic} changed forever!",
+        "shock": "SHOCKING! This {topic} moment is blowing everyone's mind!",
+        "geger": "BREAKING! The entire {topic} scene is freaking out!",
+        "emotional": "WARNING: This {topic} moment will bring you to tears..."
+      },
+      "cta": ["Follow for more daily content", "Save this video before it gets deleted", "Drop your thoughts in the comments"],
+      "hashtag_pool": ["#viralus", "#foryoupage", "#trendingus", "#americanlifestyle", "#usacontent"]
+    },
+    "en-GB": {
+      "name": "United Kingdom",
+      "lang": "en-GB",
+      "currency": "GBP (£)",
+      "slang": ["proper mental", "mate", "absolute madness", "gutted", "spot on"],
+      "hook_styles": {
+        "viral": "VIRAL IN THE UK! This {topic} moment is proper mental mate!",
+        "reason": "Turns out THIS is the real reason behind {topic}!",
+        "shock": "ABSOLUTE MADNESS! Nobody in {topic} saw this coming!",
+        "geger": "MASSIVE NEWS! Everyone is talking about this {topic} moment!",
+        "emotional": "BRINGING TEARS: This heartfelt {topic} moment is pure emotion..."
+      },
+      "cta": ["Drop a follow mate", "Save this for later", "Share this clip with a friend"],
+      "hashtag_pool": ["#ukviral", "#foryouuk", "#britishhumour", "#londonlife", "#uktrending"]
+    },
+    "en-CA": {
+      "name": "Canada",
+      "lang": "en-CA",
+      "currency": "CAD ($)",
+      "slang": ["eh", "wild", "insane", "beauty", "straight up"],
+      "hook_styles": {
+        "viral": "VIRAL! Everyone across Canada is replaying this {topic} clip!",
+        "reason": "Turns out THIS is the real reason why {topic} broke the internet!",
+        "shock": "THIS IS WILD! You won't believe this {topic} breakdown!",
+        "geger": "MASSIVE NEWS! The {topic} scene just got turned upside down!",
+        "emotional": "GET THE TISSUES READY: This {topic} moment is pure emotion..."
+      },
+      "cta": ["Follow for more Canadian clips", "Share this clip eh", "Save for reference"],
+      "hashtag_pool": ["#canadatiktok", "#canadaforyou", "#torontolife", "#canadiancontent", "#trendingcanada"]
+    },
+    "id-ID": {
+      "name": "Indonesia",
+      "lang": "id-ID",
+      "currency": "IDR (Rp)",
+      "slang": ["parah sih", "fix no debat", "spill", "riil", "daging banget", "syok parah"],
+      "hook_styles": {
+        "viral": "VIRAL BANGET! Momen {topic} ini mendadak bikin geger!",
+        "reason": "Ternyata ini alasannya kenapa {topic} jadi perbincangan panas!",
+        "shock": "BIKIN SHOCK! Nggak nyangka rahasia {topic} ini akhirnya terungkap!",
+        "geger": "GEGER! Detik-detik poin penting {topic} yang wajib kamu tau!",
+        "emotional": "BIKIN HARU! Momen {topic} ini beneran nyentuh hati..."
+      },
+      "cta": ["Klik follow biar nggak ketinggalan", "Simpan video ini sebelum hilang", "Tulis pendapatmu di kolom komentar"],
+      "hashtag_pool": ["#serunyabelajar", "#viralindonesia", "#foryoupageid", "#infoterkini", "#trendingid"]
+    }
+  },
+  "niches": [
+    "Gaming & Esports", "Podcast & Talkshow", "Finance & Crypto", "Politics & News", 
+    "Education & Knowledge", "Music & Song", "Comedy & Entertainment", "Technology & AI", 
+    "Business & Entrepreneurship", "Sports & Fitness", "Motivation & Self-Growth", 
+    "Film & TV Series", "Culinary & Food", "Travel & Lifestyle", "Storytelling & Mystery", 
+    "Interview & Discussion", "Reaction & Review", "Lifestyle & Fashion", "Entertainment", "General Content"
+  ],
+  "scoring_weights": {
+    "keyword_density": 0.25,
+    "emotional_cue": 0.25,
+    "curiosity_trigger": 0.20,
+    "duration_fitness": 0.15,
+    "audio_energy": 0.15
+  }
+}

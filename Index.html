@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       🆕 COOP/COEP — DIPERLUKAN untuk SharedArrayBuffer
+       (ffmpeg.wasm multi-thread & beberapa fitur WebCodecs)
+
+       ⚠️ CATATAN:
+       - Kalau CDN (MediaPipe, jsDelivr, dll) gagal load setelah ini,
+         ganti "require-corp" → "credentialless"
+       - Kalau masih bermasalah, boleh di-comment sementara.
+         ffmpeg.wasm single-thread tetap jalan tanpa ini.
+  ══════════════════════════════════════════════════════════════════ -->
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+  <meta http-equiv="Cross-Origin-Embedder-Policy" content="credentialless">
+
+  <title>Clipper Forge</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- ═══ Favicon & iOS icon ═══ -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('ai-agent-theme');
+        var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="premium-ui.css">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       🆕 HYBRID TRIM DEPENDENCY — mp4-muxer LOCAL (offline-ready)
+       Menambahkan global `Mp4Muxer` — dipakai oleh webcodecs-trimmer.js
+       Dokumentasi resmi: "include the library as a script in your HTML,
+       which will add an Mp4Muxer object to the global object"
+  ══════════════════════════════════════════════════════════════════ -->
+  <script src="./mp4-muxer.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+
+    <header class="glass-header">
+      <div class="brand-title">
+        <h1>Clipper Forge</h1>
+        <span id="versionBadge" style="font-size:0.65rem; padding:2px 8px; background:rgba(139,92,246,0.15); color:#8b5cf6; border-radius:6px; font-weight:700;">v2.7.2</span>
+      </div>
+      <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle Theme">
+        <span id="themeIcon">🌙 Dark</span>
+      </button>
+    </header>
+
+    <main class="main-grid">
+      <section class="card">
+        <div class="section-header">
+          <h2>1. Configuration & Input</h2>
+          <div class="status-group">
+            <span class="status-badge" id="statusBadge">Ready</span>
+            <span class="status-badge memory-safe-badge" id="memoryBadge">100% OFFLINE & LOCAL</span>
+          </div>
+        </div>
+
+        <div class="control-group grid-2">
+          <div class="field-wrapper">
+            <label for="regionSelect">Target Region & Language</label>
+            <select id="regionSelect" class="input-field">
+              <option value="auto">🌐 Auto Detect (default id-ID && en-US)</option>
+              <option value="id-ID" selected>🇮🇩 Indonesia (id-ID)</option>
+              <option value="en-US">🇺🇸 United States (en-US)</option>
+              <option value="en-GB">🇬🇧 United Kingdom (en-GB)</option>
+              <option value="en-CA">🇨🇦 Canada (en-CA)</option>
+            </select>
+          </div>
+
+          <div class="field-wrapper">
+            <label for="nicheSelect">Niche Engine</label>
+            <select id="nicheSelect" class="input-field">
+              <option value="AUTO">🎯 AUTO DETECT NICHE</option>
+              <option value="Gaming & Esports">🎮 Gaming & Esports</option>
+              <option value="Sports & Fitness">⚽ Sports & Fitness</option>
+              <option value="Podcast & Talkshow">🎙️ Podcast & Talkshow</option>
+              <option value="Comedy & Entertainment">😂 Comedy & Entertainment</option>
+              <option value="Education & Knowledge">💡 Education & Knowledge</option>
+              <option value="Finance & Crypto">📈 Finance & Crypto</option>
+              <option value="Technology & AI">🤖 Technology & AI</option>
+              <option value="Business & Entrepreneurship">💼 Business & Entrepreneurship</option>
+              <option value="Motivation & Self-Growth">🔥 Motivation & Self-Growth</option>
+              <option value="Film & TV Series">🎬 Film & TV Series</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="dropzone" id="dropzone" style="position: relative; cursor: pointer;">
+          <input type="file" id="videoInput" accept="video/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer;">
+          <div class="drop-icon-wrapper" style="pointer-events: none;">
+            <svg viewBox="0 0 24 24" width="36" height="36"><path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
+          </div>
+          <p style="pointer-events: none;"><strong>Klik / Seret Video Ke Sini</strong></p>
+          <span class="dropzone-hint">MP4 / MOV / M4V = potong instan · Format lain = re-encode otomatis</span>
+        </div>
+
+        <div id="fileMeta" class="meta-card hidden">
+          <span id="metaFilename">video.mp4</span>
+          <video id="sourceVideo" controls playsinline preload="metadata"></video>
+        </div>
+
+        <button id="btnGenerate" type="button" class="btn btn-primary btn-block">
+          ⚡ AUTO-ANALYZE & GENERATE CLIPS
+        </button>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>2. Output Klip & Analysis Evidence</h2>
+        </div>
+        <div id="clipResults">
+          <p class="empty-state">Belum ada klip yang dibuat. Unggah video di atas untuk memproses.</p>
+        </div>
+
+        <div id="batchActions" class="batch-actions hidden">
+          <button id="btnCopyAll" type="button" class="pagination-btn batch-btn-1">📋 Copy Semua Text</button>
+          <button id="btnDownloadAll" type="button" class="pagination-btn batch-btn-2">📥 Download Semua untuk CapCut</button>
+        </div>
+
+        <div id="paginationContainer" class="pagination-container hidden">
+          <button id="btnPrevPage" type="button" class="pagination-btn">← Sebelumnya</button>
+          <span id="pageIndicator" class="page-indicator">Halaman 1 dari 1</span>
+          <button id="btnNextPage" type="button" class="pagination-btn">Berikutnya →</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         DISCLAIMER + LEGAL FOOTER
+    ═══════════════════════════════════════════════════════════════════ -->
+    <footer style="margin-top:24px; padding:14px 16px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; font-size:0.7rem; color:var(--text-muted); line-height:1.6;">
+      <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; padding:10px 12px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:8px;">
+        <span style="font-size:1.1rem; flex-shrink:0;">⚠️</span>
+        <div style="color:#fde68a;">
+          <strong style="color:#fbbf24;">Disclaimer:</strong> Fitur "AI" adalah <strong>alat bantu</strong>, bukan pengganti penilaian manusia. Anda bertanggung jawab penuh atas hak cipta dan legalitas konten yang Anda proses. Semua video diproses <strong>lokal di browser Anda</strong>.
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <span>© 2026 Clipper Forge · v<span id="footerVersion">2.7.2</span></span>
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
+          <a href="./app.html" style="color:var(--accent-color); text-decoration:none; font-weight:600;">🏠 Tentang</a>
+          <a href="./terms.html" style="color:var(--accent-color); text-decoration:none; font-weight:600;">📜 Syarat & Ketentuan</a>
+          <a href="./privacy.html" style="color:var(--accent-color); text-decoration:none; font-weight:600;">🔒 Kebijakan Privasi</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       SCRIPT LOAD ORDER — v2.7.2 (FIXED + HYBRID LOCAL)
+  ═══════════════════════════════════════════════════════════════════ -->
+
+  <!-- ─── CORE LAYER ─── -->
+  <script src="resource-manager.js"></script>
+  <script src="video-signal-engine.js"></script>
+  <script src="hooks-db.js"></script>
+  <script src="mp4-trim.js"></script>
+  <script src="mp4box.all.min.js"></script>
+  <script src="ffmpeg.js"></script>
+  <script src="script.js"></script>
+  <script src="features-v2.js"></script>
+
+  <!-- ─── AI UNIFIED LAYER ─── -->
+  <script type="module" src="ai-bridge.js"></script>
+  <script src="ai.js"></script>
+
+  <!-- ─── LLM ENGINE + CACHE + PATCH ─── -->
+  <script src="llm-engine.js"></script>
+  <script src="llm-cache.js"></script>
+  <script src="llm-patch.js"></script>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       ⚠️ auto-config.js + auto-config-backup.js di-load via main.js
+       (karena pakai ES module syntax `export`)
+  ══════════════════════════════════════════════════════════════════ -->
+
+  <!-- ─── ENHANCEMENT ─── -->
+  <script src="turbo-mode.js"></script>
+  <script src="auto-save.js"></script>
+  <script src="./clipper-core.js" defer></script>
+  <script src="upgrades-v26.js"></script>
+
+  <!-- ─── SPEECH RECOGNITION LAYER ─── -->
+  <script src="whisper-auto.js"></script>
+  <script src="whisper-addon.js" defer></script>
+
+  <!-- ─── VERSION & UPDATE ─── -->
+  <script src="version-registry.js"></script>
+  <script src="update-auto.js"></script>
+  <script src="version-badge.js"></script>
+
+  <!-- ─── SMART PATCH INLINE (auto-save hook + version fix) ─── -->
+  <script>
+  (function () {
+    'use strict';
+    if (window.__SMART_PATCH_INLINE__) return;
+    window.__SMART_PATCH_INLINE__ = true;
+
+    const CURRENT_VERSION = '2.7.2';
+
+    function hookAItoAutoSave() {
+      if (!window.AIEngine || !window.AIEngine.run) return false;
+      if (window.AIEngine.__autoSaveHooked) return true;
+      window.AIEngine.__autoSaveHooked = true;
+      const origRun = window.AIEngine.run;
+      window.AIEngine.run = async function () {
+        const result = await origRun.apply(this, arguments);
+        setTimeout(() => { try { window.dispatchEvent(new Event('beforeunload')); } catch (e) {} }, 1500);
+        return result;
+      };
+      console.log('[SmartPatch-Inline] ✅ Hook AIEngine → auto-save');
+      return true;
+    }
+
+    function hookCapCutToAutoSave() {
+      if (!window.CapCutEngine || !window.CapCutEngine.exportClip) return false;
+      if (window.CapCutEngine.__autoSaveHooked) return true;
+      window.CapCutEngine.__autoSaveHooked = true;
+      const origExport = window.CapCutEngine.exportClip;
+      window.CapCutEngine.exportClip = async function () {
+        const result = await origExport.apply(this, arguments);
+        setTimeout(() => {
+          try {
+            if (result && result.filename) window.__lastCapCutExport = { filename: result.filename, ts: Date.now() };
+            window.dispatchEvent(new Event('beforeunload'));
+          } catch (e) {}
+        }, 800);
+        return result;
+      };
+      console.log('[SmartPatch-Inline] ✅ Hook CapCutEngine → auto-save');
+      return true;
+    }
+
+    function patchVersionFallback() {
+      if (!window.AppVersion) return false;
+      if (window.AppVersion.__patchApplied) return true;
+      window.AppVersion.__patchApplied = true;
+      const OLD = ['7.7', '2.2.0', '2.2.1', '2.3.0', '2.4.0', '2.4.1', '2.5.0', '2.6.0', '2.6.1', '2.7.0', '2.7.1'];
+      if (OLD.includes(window.AppVersion.current)) {
+        window.AppVersion.current = CURRENT_VERSION;
+        console.log('[SmartPatch-Inline] ✅ Version diubah ke ' + CURRENT_VERSION);
+      }
+      return true;
+    }
+
+    function patchVersionRegistry() {
+      if (!window.AppVersion || !Array.isArray(window.AppVersion.modules)) return false;
+      if (window.AppVersion.__modulesPatched) return true;
+      window.AppVersion.__modulesPatched = true;
+      const required = [
+        { file: 'ai.js',                  runtime: 'AIEngine',   role: 'AI Unified Layer v3.3' },
+        { file: 'ai-bridge.js',           runtime: 'AIWorkerBridge', role: 'AI Worker Bridge v2.7.2' },
+        { file: 'llm-engine.js',          runtime: 'LLMEngine',  role: 'Real AI Copywriter (Human Voice)' },
+        { file: 'llm-cache.js',           runtime: 'LLMCache',   role: 'LLM Persistent Cache' },
+        { file: 'auto-config.js',         runtime: 'AutoConfig', role: 'Adaptive Device Config' },
+        { file: 'auto-save.js',           runtime: null,         role: 'Auto Save localStorage' },
+        { file: 'whisper-auto.js',        runtime: 'WhisperAutoEngine', role: 'Speech Recognition Layer' }
+      ];
+      required.forEach(m => {
+        if (!window.AppVersion.modules.some(x => x.file === m.file)) {
+          window.AppVersion.modules.push(m);
+        }
+      });
+      console.log('[SmartPatch-Inline] ✅ Version registry dilengkapi');
+      return true;
+    }
+
+    function patchUI() {
+      const vBadge = document.getElementById('versionBadge');
+      if (vBadge && vBadge.textContent !== 'v' + CURRENT_VERSION) {
+        vBadge.textContent = 'v' + CURRENT_VERSION;
+      }
+      const fVersion = document.getElementById('footerVersion');
+      if (fVersion && fVersion.textContent !== CURRENT_VERSION) {
+        fVersion.textContent = CURRENT_VERSION;
+      }
+      return true;
+    }
+
+    function boot() {
+      let tries = 0;
+      const t = setInterval(() => {
+        const a = hookAItoAutoSave();
+        const b = patchVersionFallback();
+        const c = patchVersionRegistry();
+        const d = hookCapCutToAutoSave();
+        const e = patchUI();
+        if (a && b && c && d && e) {
+          clearInterval(t);
+          console.log('%c[SmartPatch-Inline] ✅ FULL STACK SYNC AKTIF — v' + CURRENT_VERSION, 'color:#10b981;font-weight:bold;');
+        } else if (++tries > 40) {
+          clearInterval(t);
+          console.warn('[SmartPatch-Inline] ⚠️ Sebagian hook gagal:', { a, b, c, d, e });
+        }
+      }, 300);
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 1500));
+    else setTimeout(boot, 1500);
+  })();
+  </script>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       🔑 ENTRY MODULE — WAJIB PALING AKHIR
+  ══════════════════════════════════════════════════════════════════ -->
+  <script type="module" src="main.js"></script>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       🆕 HYBRID TRIM LAYER — WebCodecs + FFmpeg Mux (v2.7.2+)
+       Dipindah ke sini agar eksekusi jelas setelah main.js
+       TIDAK mengubah kode lama, hanya patch MP4TrimEngine
+  ══════════════════════════════════════════════════════════════════ -->
+  <script type="module" src="./webcodecs-trimmer.js"></script>
+  <script type="module" src="./ffmpeg-muxer.js"></script>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       🆕 FALLBACK — versi nama file dengan TITIK (ffmpeg.muxer.js)
+       Kalau file lama pakai titik, ini yang akan load.
+       Kalau tidak ada, browser log 404 (harmless) dan lewati.
+       Keduanya menulis `window.FFmpegMuxer` — yang terakhir menang.
+       Isi identik, jadi tidak ada duplikasi logic.
+  ══════════════════════════════════════════════════════════════════ -->
+  <script type="module" src="./ffmpeg.muxer.js"></script>
+
+  <script type="module" src="./smart-trimmer.js"></script>
+  <script type="module" src="./trim-router.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       SERVICE WORKER REGISTRATION
+  ═══════════════════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      'use strict';
+      if (!('serviceWorker' in navigator)) {
+        console.warn('[SW] Service Worker tidak didukung');
+        return;
+      }
+
+      window.addEventListener('load', async function () {
+        try {
+          const reg = await navigator.serviceWorker.register('./sw.js');
+          console.log('[SW] Registered. Scope:', reg.scope);
+
+          reg.addEventListener('updatefound', function () {
+            const newSW = reg.installing;
+            if (!newSW) return;
+            newSW.addEventListener('statechange', function () {
+              if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('[SW] New SW installed — activating...');
+                newSW.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+
+          navigator.serviceWorker.addEventListener('message', function (event) {
+            if (event.data && event.data.type === 'RELOAD_NOW') {
+              console.log('[SW] Reload requested by SW');
+              setTimeout(() => window.location.reload(), 300);
+            }
+          });
+
+        } catch (err) {
+          console.warn('[SW] Register gagal:', err);
+        }
+      });
+    })();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       VERSION SYNC
+  ═══════════════════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      'use strict';
+      function syncVersion() {
+        fetch('./version.json?t=' + Date.now(), { cache: 'no-store' })
+          .then(r => r.ok ? r.json() : null)
+          .then(info => {
+            if (!info || !info.version) return;
+            const v = info.version;
+            const vBadge = document.getElementById('versionBadge');
+            if (vBadge) vBadge.textContent = 'v' + v;
+            const fVersion = document.getElementById('footerVersion');
+            if (fVersion) fVersion.textContent = v;
+            console.log('[VersionSync] ✅ UI version: v' + v);
+          })
+          .catch(() => {});
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(syncVersion, 800));
+      } else {
+        setTimeout(syncVersion, 800);
+      }
+    })();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       DEV TOOL: ICON GENERATOR
+  ═══════════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+    if (location.hash !== '#icon-gen') return;
+
+    const panel = document.createElement('div');
+    panel.id = 'iconGenPanel';
+    panel.style.cssText = 'position:fixed;inset:0;background:#0b0f19;z-index:9999999;padding:24px;overflow-y:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;text-align:center;color:#f8fafc;';
+    panel.innerHTML = `
+      <h1 style="font-size:1.3rem;margin:0 0 8px;">🎨 Icon Generator — Clipper Forge</h1>
+      <p style="color:#94a3b8;font-size:0.82rem;margin:0 0 24px;line-height:1.5;">
+        Klik tombol di bawah untuk download <b>icon-192.png</b> & <b>icon-512.png</b><br>
+        Pindahkan kedua file ke folder project (sebelah index.html)
+      </p>
+      <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
+        <div>
+          <canvas id="ic192" width="192" height="192" style="border-radius:18px;box-shadow:0 8px 32px rgba(139,92,246,0.4);display:block;"></canvas>
+          <p style="font-size:0.7rem;color:#64748b;margin:8px 0 0;">192 × 192</p>
+        </div>
+        <div>
+          <canvas id="ic512" width="512" height="512" style="border-radius:18px;box-shadow:0 8px 32px rgba(139,92,246,0.4);display:block;max-width:100%;height:auto;"></canvas>
+          <p style="font-size:0.7rem;color:#64748b;margin:8px 0 0;">512 × 512</p>
+        </div>
+      </div>
+      <button id="icDownload" type="button" style="background:linear-gradient(135deg,#8b5cf6,#38bdf8);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(139,92,246,0.4);">📥 Download Kedua PNG</button>
+      <div id="icStatus" style="margin-top:16px;font-size:0.82rem;color:#10b981;font-weight:600;min-height:20px;"></div>
+      <p style="margin-top:32px;font-size:0.7rem;color:#475569;">
+        Hapus <code style="background:#1e293b;padding:2px 6px;border-radius:4px;">#icon-gen</code> dari URL untuk kembali ke app
+      </p>
+    `;
+    document.body.appendChild(panel);
+    document.title = 'Icon Generator — Clipper Forge';
+
+    function rr(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const S = canvas.width;
+      const k = S / 512;
+
+      ctx.fillStyle = '#0b0f19';
+      rr(ctx, 0, 0, S, S, 112 * k);
+      ctx.fill();
+
+      const grad = ctx.createLinearGradient(0, 0, S, S);
+      grad.addColorStop(0, '#8b5cf6');
+      grad.addColorStop(1, '#38bdf8');
+      rr(ctx, 32 * k, 32 * k, 448 * k, 448 * k, 96 * k);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(200 * k, 160 * k);
+      ctx.lineTo(360 * k, 256 * k);
+      ctx.lineTo(200 * k, 352 * k);
+      ctx.closePath();
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(380 * k, 140 * k, 28 * k, 0, Math.PI * 2);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fill();
+    }
+
+    function downloadCanvas(canvas, filename) {
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          resolve();
+        }, 'image/png');
+      });
+    }
+
+    const c192 = document.getElementById('ic192');
+    const c512 = document.getElementById('ic512');
+    drawIcon(c192);
+    drawIcon(c512);
+
+    document.getElementById('icDownload').onclick = async () => {
+      const s = document.getElementById('icStatus');
+      s.textContent = '⏳ Generating...';
+      await downloadCanvas(c192, 'icon-192.png');
+      await new Promise(r => setTimeout(r, 500));
+      await downloadCanvas(c512, 'icon-512.png');
+      s.textContent = '✅ Selesai! Cek folder Downloads.';
+    };
+
+    console.log('[IconGen] 🎨 Aktif — URL #icon-gen');
+  })();
+  </script>
+
+</body>
+</html>

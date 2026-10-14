@@ -1,0 +1,7 @@
+{
+  "version": "2.7.2",
+  "released": "2026-10-13T00:00:00Z",
+  "changelog": "CRITICAL FIX: ai.js SyntaxError (double onProgress), worker.js window shim, ai-bridge.js race condition, clipper-core.js SW conflict. Plus: landing page links fixed, whisper-auto.js loaded, version sync unified.",
+  "notes": "Upgrade dari 2.6.0 — semua file kompatibel 100%",
+  "critical": false
+}
